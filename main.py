@@ -294,34 +294,53 @@ class JanusPrologRunner:
                 try:
                     # Execute query and collect all solutions
                     actual_results = []
+                    found_solutions = False
 
                     # Use janus query functions
                     for solution in janus.query(query.query):
+                        found_solutions = True
                         if solution:
                             # Extract variable bindings
-                            if isinstance(solution, dict):
-                                # For queries with variables, collect the variable values
-                                if solution:  # Non-empty dict means successful binding
-                                    for var, value in solution.items():
+                            if isinstance(solution, dict) and solution:
+                                # For queries with variables, collect ONLY the variable values
+                                for var, value in solution.items():
+                                    # Skip boolean indicators and None values, only collect actual variable values
+                                    if value not in [True, False, 'True', 'False', None, 'None'] and str(value) not in [
+                                        'True', 'False', 'None']:
                                         actual_results.append(str(value))
-                            else:
-                                actual_results.append(str(solution))
-                        else:
-                            # Handle boolean queries (true/false results)
+                            elif not isinstance(solution, dict):
+                                # For non-dict results, only add if it's not a boolean indicator or None
+                                if (solution not in [True, False, 'True', 'False', None, 'None'] and
+                                        str(solution) not in ['True', 'False', 'None']):
+                                    actual_results.append(str(solution))
+
+                    # If we found solutions but no actual_results were collected,
+                    # this might be a boolean query that succeeded
+                    if found_solutions and not actual_results:
+                        # Check if this is a pure boolean query (no variables expected)
+                        if not query.expected or (len(query.expected) == 1 and query.expected[0] in ['true', True]):
                             actual_results.append("true")
 
-                    # If no solutions were found, the query failed
-                    if not actual_results:
-                        # Try query_once to check if it's a boolean query that succeeds
+                    # If no solutions were found at all, try query_once for boolean queries
+                    if not found_solutions:
                         try:
                             result = janus.query_once(query.query)
                             if result is not None:
-                                actual_results.append("true")
+                                if isinstance(result, dict) and result:
+                                    # Extract variable values from the single result
+                                    for var, value in result.items():
+                                        # Skip boolean indicators
+                                        if value not in [True, False, 'True', 'False', None, 'None']:
+                                            actual_results.append(str(value))
+                                elif result is True:
+                                    # Only add "true" for pure boolean queries with no variables
+                                    if not any(c.isupper() for c in query.query):  # Simple heuristic for no variables
+                                        actual_results.append("true")
                         except:
                             pass  # Query failed, actual_results remains empty
 
-                    # Handle expected empty results (should fail)
-                    if not query.expected:  # Expected to fail
+                    # Handle expected results comparison
+                    if not query.expected or query.expected == ['false']:  # Expected to fail
                         correct = len(actual_results) == 0
                     else:
                         # Compare with expected results
@@ -356,7 +375,6 @@ class JanusPrologRunner:
 
         except Exception as e:
             return GameResult.PROLOG_ERROR, {"error": f"Prolog error: {str(e)}"}
-
 
 class LawMakerGUI:
     """Solarpunk-themed GUI for the Law Maker game"""

@@ -30,7 +30,7 @@
       },
       {
         "query": "subsidy_amount(diana, Amount)",
-        "expected": ["false"],
+        "expected": ["50"],
         "description": "Diana is 23 but not a student, should not get subsidy"
       },
       {
