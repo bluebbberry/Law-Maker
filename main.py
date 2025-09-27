@@ -320,7 +320,7 @@ class LawMakerGUI:
 
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Lawmaker")
+        self.root.title("Law Maker")
         self.root.geometry("1000x700")
 
         # Game state
