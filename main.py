@@ -458,7 +458,7 @@ class LawMakerGUI:
         title_label.pack(pady=10)
 
         subtitle = ttk.Label(header_frame,
-                             text="ID: 580823423, B Wing",
+                             text="B Wing, 2030/05/12",
                              style='Header.TLabel')
         subtitle.pack(pady=(0, 10))
 
