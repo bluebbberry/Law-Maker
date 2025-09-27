@@ -1,0 +1,50 @@
+{
+  "file": "01_student_meal_subsidy.json",
+  "content": {
+    "id": "student_meal_subsidy",
+    "title": "Student Meal Subsidy Law",
+    "description": "Implement the new student meal subsidy law for Solarfurt",
+    "background_story": "Welcome to Solarfurt, civil servant! The city council has just passed the Student Meal Subsidy Law. Your job is to implement this law in our legal database system (Prolog).\n\nThe law is simple: students who are under 25 years old and have low income are eligible for meal subsidies. Students get 50 credits per month, and low-income students get an additional 30 credits bonus.\n\nThis is your first assignment - make sure to read the law carefully and implement it correctly!",
+    "given_facts": "% Citizens of Solarfurt\nperson(alice).\nperson(bob).\nperson(charlie).\nperson(diana).\nperson(eve).\n\n% Personal information\nage(alice, 22).\nage(bob, 26).\nage(charlie, 19).\nage(diana, 23).\nage(eve, 24).\n\n% Income levels\nincome(alice, low).\nincome(bob, medium).\nincome(charlie, low).\nincome(diana, high).\nincome(eve, medium).\n\n% Student status\nstudent(alice).\nstudent(charlie).\nstudent(diana).\nstudent(eve).",
+    "law_description": "Student Meal Subsidy Law (City Ordinance 2024-001):\n\n1. A person is eligible for meal subsidy if they are:\n   - A registered student AND\n   - Under 25 years old\n\n2. Subsidy amounts:\n   - Base subsidy: 50 credits per month for eligible students\n   - Low-income bonus: Additional 30 credits (total 80 credits)\n   - Students with medium/high income get only base amount (50 credits)\n\n3. Implementation requirements:\n   - Implement predicate: eligible(Person)\n   - Implement predicate: subsidy_amount(Person, Amount)\n   - Non-eligible persons should make subsidy_amount/2 fail",
+    "queries": [
+      {
+        "query": "eligible(X)",
+        "expected": ["alice", "charlie", "eve"],
+        "description": "Find all people eligible for meal subsidies"
+      },
+      {
+        "query": "subsidy_amount(alice, Amount)",
+        "expected": ["80"],
+        "description": "Alice is a low-income student under 25, should get 80 credits"
+      },
+      {
+        "query": "subsidy_amount(charlie, Amount)",
+        "expected": ["80"],
+        "description": "Charlie is a low-income student under 25, should get 80 credits"
+      },
+      {
+        "query": "subsidy_amount(eve, Amount)",
+        "expected": ["50"],
+        "description": "Eve is a medium-income student under 25, should get 50 credits"
+      },
+      {
+        "query": "subsidy_amount(diana, Amount)",
+        "expected": ["false"],
+        "description": "Diana is 23 but not a student, should not get subsidy"
+      },
+      {
+        "query": "subsidy_amount(bob, Amount)",
+        "expected": ["false"],
+        "description": "Bob is over 25, should not get subsidy"
+      }
+    ],
+    "hints": [
+      "Use conjunction (,) to check both student status AND age condition",
+      "Check 'income(Person, low)' to determine if someone gets the bonus",
+      "Use \\+ (negation) to check for non-low income in the base amount rule",
+      "Make sure subsidy_amount/2 fails for non-eligible people"
+    ],
+    "difficulty": 1
+  }
+}
