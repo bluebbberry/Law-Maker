@@ -82,7 +82,7 @@ class LevelLoader:
         """Load a single level from a JSON file"""
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
+                data = json.load(f).get('content')
 
             queries = []
             for q_data in data.get('queries', []):

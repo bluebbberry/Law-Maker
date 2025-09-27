@@ -10,7 +10,7 @@
     "queries": [
       {
         "query": "eligible(X)",
-        "expected": ["alice", "charlie", "eve"],
+        "expected": ["alice", "charlie", "diana", "eve"],
         "description": "Find all people eligible for meal subsidies"
       },
       {
