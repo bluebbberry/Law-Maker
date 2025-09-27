@@ -56,82 +56,115 @@ class Level:
     difficulty: int = 1
 
 
+# Updated GUI text elements with cleaner Star Trek + Solarpunk styling
+GUI_TEXT = {
+    'app_title': "LAW MAKER",
+    'app_subtitle': "Integrated Legal Code Compiler",
+    'mission_select': "Mission Selection",
+    'legal_brief': "Legal Brief",
+    'code_forge': "Code Editor",
+    'test_results': "Test Results",
+    'activate_mission': "Activate Mission",
+    'refresh_database': "Refresh Database",
+    'test_implementation': "Test Implementation",
+    'clear_code': "Clear Code",
+    'load_example': "Load Example",
+    'clear_report': "Clear Report",
+    'mission_header': "Select Your Legal Mission",
+    'mission_desc': "Choose a law to implement in the integrated legal database:",
+    'code_forge_header': "Prolog Code Editor",
+    'compliance_report': "Legal Compliance Report",
+    'analyzing': "Analyzing...",
+    'prolog_online': "Janus Prolog Online",
+    'prolog_offline': "Prolog Offline",
+    'mission_accomplished': "MISSION ACCOMPLISHED",
+    'system_error': "SYSTEM ERROR",
+    'compliance_violations': "COMPLIANCE VIOLATIONS DETECTED"
+}
+
+
 class SolarpunkTheme:
     """Solarpunk theme colors and styles - rusty-futuristic aesthetic"""
 
-    # Color palette inspired by oxidized copper, moss, and solar panels
+    # Color palette inspired by Star Trek LCARS + natural elements
     COLORS = {
-        'bg_primary': '#2D3E2C',  # Deep forest green
-        'bg_secondary': '#3A4F39',  # Moss green
-        'bg_panel': '#4A5D49',  # Sage green
-        'bg_input': '#1E2B1D',  # Dark forest
-        'accent_copper': '#B87333',  # Oxidized copper
-        'accent_brass': '#DAA520',  # Brass highlights
-        'accent_rust': '#A0522D',  # Rust brown
-        'accent_mint': '#98FB98',  # Mint green
-        'text_primary': '#E8F5E8',  # Light mint
-        'text_secondary': '#C8E6C8',  # Pale green
-        'text_accent': '#FFD700',  # Gold
-        'warning': '#FF6347',  # Tomato red
-        'success': '#90EE90',  # Light green
-        'border': '#556B2F',  # Olive drab
-        'hover': '#5A6F59'  # Hover state
+        'bg_primary': '#0A0E1A',  # Deep space blue-black
+        'bg_secondary': '#1B2B35',  # Dark teal
+        'bg_panel': '#2A4A5A',  # Medium blue-gray
+        'bg_input': '#0F1419',  # Very dark blue
+        'accent_primary': '#00D4AA',  # Bright teal (Star Trek-ish)
+        'accent_secondary': '#66B2FF',  # Bright blue
+        'accent_tertiary': '#FFB366',  # Warm orange
+        'accent_success': '#00FF88',  # Bright green
+        'text_primary': '#E8F4F8',  # Very light blue-white
+        'text_secondary': '#B8D4E8',  # Light blue
+        'text_accent': '#00D4AA',  # Matching accent
+        'warning': '#FF6B35',  # Orange-red
+        'success': '#00FF88',  # Bright green
+        'border': '#4A6FA5',  # Medium blue
+        'hover': '#3A5F85'  # Hover blue
     }
 
     @staticmethod
     def configure_style():
-        """Configure ttk styles with Solarpunk theme"""
+        """Configure ttk styles with Star Trek + Solarpunk fusion theme"""
         style = ttk.Style()
 
-        # Configure main styles
+        # Main frame styles
         style.configure('Solarpunk.TFrame',
-                        background=SolarpunkTheme.COLORS['bg_primary'])
+                        background=SolarpunkTheme.COLORS['bg_primary'],
+                        relief='flat')
 
         style.configure('Panel.TFrame',
                         background=SolarpunkTheme.COLORS['bg_panel'],
-                        relief='raised',
-                        borderwidth=2)
+                        relief='ridge',
+                        borderwidth=1)
 
+        # Label styles
         style.configure('Solarpunk.TLabel',
                         background=SolarpunkTheme.COLORS['bg_primary'],
                         foreground=SolarpunkTheme.COLORS['text_primary'],
-                        font=('Consolas', 10))
+                        font=('Helvetica', 10))
 
         style.configure('Title.TLabel',
                         background=SolarpunkTheme.COLORS['bg_primary'],
-                        foreground=SolarpunkTheme.COLORS['accent_brass'],
-                        font=('Consolas', 16, 'bold'))
+                        foreground=SolarpunkTheme.COLORS['accent_primary'],
+                        font=('Helvetica', 18, 'bold'))
 
         style.configure('Header.TLabel',
                         background=SolarpunkTheme.COLORS['bg_primary'],
                         foreground=SolarpunkTheme.COLORS['text_accent'],
-                        font=('Consolas', 12, 'bold'))
+                        font=('Helvetica', 12, 'bold'))
 
+        # Button styles - more Star Trek LCARS inspired
         style.configure('Solarpunk.TButton',
-                        background=SolarpunkTheme.COLORS['accent_copper'],
-                        foreground=SolarpunkTheme.COLORS['text_primary'],
-                        font=('Consolas', 10, 'bold'),
-                        borderwidth=2,
-                        relief='raised')
+                        background=SolarpunkTheme.COLORS['accent_primary'],
+                        foreground=SolarpunkTheme.COLORS['bg_primary'],
+                        font=('Helvetica', 10, 'bold'),
+                        borderwidth=0,
+                        relief='flat',
+                        padding=(12, 6))
 
         style.map('Solarpunk.TButton',
-                  background=[('active', SolarpunkTheme.COLORS['accent_brass']),
-                              ('pressed', SolarpunkTheme.COLORS['accent_rust'])])
+                  background=[('active', SolarpunkTheme.COLORS['accent_secondary']),
+                              ('pressed', SolarpunkTheme.COLORS['accent_tertiary'])])
 
+        # Notebook styles
         style.configure('Solarpunk.TNotebook',
                         background=SolarpunkTheme.COLORS['bg_primary'],
-                        borderwidth=2)
+                        borderwidth=0)
 
         style.configure('Solarpunk.TNotebook.Tab',
                         background=SolarpunkTheme.COLORS['bg_secondary'],
                         foreground=SolarpunkTheme.COLORS['text_secondary'],
-                        padding=[20, 8],
-                        font=('Consolas', 10, 'bold'))
+                        padding=[16, 8],
+                        font=('Helvetica', 10, 'bold'),
+                        borderwidth=1)
 
         style.map('Solarpunk.TNotebook.Tab',
-                  background=[('selected', SolarpunkTheme.COLORS['accent_copper']),
+                  background=[('selected', SolarpunkTheme.COLORS['accent_primary']),
                               ('active', SolarpunkTheme.COLORS['hover'])],
-                  foreground=[('selected', SolarpunkTheme.COLORS['text_primary'])])
+                  foreground=[('selected', SolarpunkTheme.COLORS['bg_primary'])])
 
         return style
 
@@ -381,7 +414,7 @@ class LawMakerGUI:
 
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("🌱 Law Maker - Solarfurt Legal System 🔋")
+        self.root.title("Law Maker")
         self.root.geometry("1200x800")
 
         # Apply Solarpunk theme
@@ -420,12 +453,12 @@ class LawMakerGUI:
         header_frame.pack(fill=tk.X, padx=5, pady=5)
 
         title_label = ttk.Label(header_frame,
-                                text="🌱 LAW MAKER - SOLARFURT LEGAL SYSTEM 🔋",
+                                text="Solarfurt Department of Finance",
                                 style='Title.TLabel')
         title_label.pack(pady=10)
 
         subtitle = ttk.Label(header_frame,
-                             text="⚖️ Rusty-Futuristic Legal Code Compiler ⚖️",
+                             text="ID: 580823423, B Wing",
                              style='Header.TLabel')
         subtitle.pack(pady=(0, 10))
 
@@ -457,8 +490,8 @@ class LawMakerGUI:
             parent,
             bg=SolarpunkTheme.COLORS['bg_input'],
             fg=SolarpunkTheme.COLORS['text_primary'],
-            insertbackground=SolarpunkTheme.COLORS['accent_brass'],
-            selectbackground=SolarpunkTheme.COLORS['accent_copper'],
+            insertbackground=SolarpunkTheme.COLORS['accent_tertiary'],
+            selectbackground=SolarpunkTheme.COLORS['accent_primary'],
             relief='sunken',
             borderwidth=2,
             **kwargs
@@ -488,7 +521,7 @@ class LawMakerGUI:
             font=('Consolas', 11),
             bg=SolarpunkTheme.COLORS['bg_input'],
             fg=SolarpunkTheme.COLORS['text_primary'],
-            selectbackground=SolarpunkTheme.COLORS['accent_copper'],
+            selectbackground=SolarpunkTheme.COLORS['accent_tertiary'],
             selectforeground=SolarpunkTheme.COLORS['text_primary'],
             relief='sunken',
             borderwidth=2
@@ -791,7 +824,7 @@ class LawMakerGUI:
         # Add some color coding
         self.results_text.tag_configure("success", foreground=SolarpunkTheme.COLORS['success'])
         self.results_text.tag_configure("error", foreground=SolarpunkTheme.COLORS['warning'])
-        self.results_text.tag_configure("header", foreground=SolarpunkTheme.COLORS['accent_brass'])
+        self.results_text.tag_configure("header", foreground=SolarpunkTheme.COLORS['accent_secondary'])
 
         # Apply tags
         content = self.results_text.get(1.0, tk.END)
