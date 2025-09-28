@@ -972,7 +972,9 @@ subsidy_amount(Person, Amount) :-
             # Welcome message
             welcome_msg = """Welcome to Solarfurt!
 
-    It's the year 2028 and society is aging. To tacle the problem, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
+    It's the year 2028. Society is aging and more and more civil servants are starting to retire.
+    
+    To tacle the problem, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
     For this, a new device was developed: the "Pocket-Inferer", a logical calculator with which public servants could turn laws, data and queries into understandable code.
     As a civil servant, your task will be to learn how to use the Pocket-Inferer and turn law into code.
 
