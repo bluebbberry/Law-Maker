@@ -647,7 +647,7 @@ class LawMakerGUI:
         """Populate the level selection list"""
         self.level_listbox.delete(0, tk.END)
         for i, level in enumerate(self.levels):
-            difficulty_icons = "⚡" * level.difficulty + "🌿" * (5 - level.difficulty)
+            difficulty_icons = "☀️" * level.difficulty
             self.level_listbox.insert(tk.END,
                                       f"Mission {i + 1}: {level.title} {difficulty_icons}")
 
