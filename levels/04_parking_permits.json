@@ -1,0 +1,52 @@
+{
+  "id": "parking_permits",
+  "title": "Parking Permit Regulation",
+  "description": "Implement the new parking permit pricing system for Solarfurt",
+  "background_story": "The Solarfurt Traffic Department has completely overhauled the parking system! Mayor Johnson wants a fair system that considers both resident needs and city revenue.\n\nThe new law has complex pricing rules based on resident type, vehicle ownership, and district location. Some residents get free permits, others pay reduced rates, and there's even a downtown surcharge!\n\nThe city council is watching this implementation closely - make sure you get the calculations right!",
+  "given_facts": "% Residents of Solarfurt\nperson(emma).\nperson(frank).\nperson(grace).\nperson(henry).\nperson(iris).\nperson(jack).\n\n% Resident classifications\nresident_type(emma, senior).\nresident_type(frank, disabled).\nresident_type(grace, regular).\nresident_type(henry, student).\nresident_type(iris, regular).\nresident_type(jack, senior).\n\n% Vehicle ownership\nowns_car(emma).\nowns_car(frank).\nowns_car(grace).\nowns_car(iris).\n% henry and jack don't own cars\n\n% District information\nlives_in_district(emma, downtown).\nlives_in_district(frank, suburbs).\nlives_in_district(grace, downtown).\nlives_in_district(henry, downtown).\nlives_in_district(iris, riverside).\nlives_in_district(jack, suburbs).",
+  "law_description": "Parking Permit Law (City Ordinance 2024-002):\n\n1. Permit eligibility:\n   - Only residents who own cars can get parking permits\n   - All car-owning residents are entitled to one permit\n\n2. Base pricing by resident type:\n   - Senior citizens: FREE (0 credits)\n   - Disabled residents: FREE (0 credits)\n   - Students: Discounted rate (25 credits)\n   - Regular residents: Full price (100 credits)\n\n3. District surcharges:\n   - Downtown district: +20 credits surcharge\n   - All other districts: No surcharge\n   - Exception: Free permits (seniors/disabled) have NO surcharge\n\n4. Implementation requirements:\n   - Implement predicate: has_permit(Person)\n   - Implement predicate: permit_cost(Person, Cost)\n   - Non-car owners should make both predicates fail",
+  "queries": [
+    {
+      "query": "has_permit(X)",
+      "expected": ["emma", "frank", "grace", "iris"],
+      "description": "Find all residents who can get parking permits (car owners only)"
+    },
+    {
+      "query": "permit_cost(emma, Cost)",
+      "expected": ["0"],
+      "description": "Emma is a senior in downtown - free permit, no surcharge"
+    },
+    {
+      "query": "permit_cost(frank, Cost)",
+      "expected": ["0"],
+      "description": "Frank is disabled in suburbs - free permit"
+    },
+    {
+      "query": "permit_cost(grace, Cost)",
+      "expected": ["120"],
+      "description": "Grace is regular resident in downtown - 100 + 20 surcharge"
+    },
+    {
+      "query": "permit_cost(iris, Cost)",
+      "expected": ["100"],
+      "description": "Iris is regular resident in riverside - 100, no surcharge"
+    },
+    {
+      "query": "permit_cost(henry, Cost)",
+      "expected": ["false"],
+      "description": "Henry doesn't own a car, should fail"
+    },
+    {
+      "query": "permit_cost(jack, Cost)",
+      "expected": ["false"],
+      "description": "Jack doesn't own a car, should fail"
+    }
+  ],
+  "hints": [
+    "Start by checking car ownership - this is required for both predicates",
+    "Senior and disabled residents get free permits (cost = 0)",
+    "Downtown surcharge applies only to non-free permits",
+    "Use different rules for different resident types to calculate costs"
+  ],
+  "difficulty": 2
+}

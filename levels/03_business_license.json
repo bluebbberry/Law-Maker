@@ -1,0 +1,68 @@
+{
+  "id": "business_licenses",
+  "title": "Business License Classification System",
+  "description": "Implement the comprehensive business licensing system for Solarfurt",
+  "background_story": "The Solarfurt Department of Commerce is modernizing! They need a new system to classify businesses and determine their licensing requirements.\n\nThis is more complex than previous laws - you'll need to handle multiple business types, employee counts, revenue brackets, and even special exemptions for certain categories.\n\nThe Chamber of Commerce is pressuring for quick implementation, but accuracy is crucial. Get this wrong and legitimate businesses could be shut down!",
+  "given_facts": "% Registered businesses\nbusiness(techcorp).\nbusiness(moms_bakery).\nbusiness(city_hospital).\nbusiness(green_consulting).\nbusiness(mega_retail).\nbusiness(local_cafe).\nbusiness(startup_inc).\nbusiness(charity_foundation).\n\n% Business types\nbusiness_type(techcorp, technology).\nbusiness_type(moms_bakery, food_service).\nbusiness_type(city_hospital, healthcare).\nbusiness_type(green_consulting, consulting).\nbusiness_type(mega_retail, retail).\nbusiness_type(local_cafe, food_service).\nbusiness_type(startup_inc, technology).\nbusiness_type(charity_foundation, non_profit).\n\n% Employee counts\nemployee_count(techcorp, 45).\nemployee_count(moms_bakery, 3).\nemployee_count(city_hospital, 120).\nemployee_count(green_consulting, 8).\nemployee_count(mega_retail, 85).\nemployee_count(local_cafe, 2).\nemployee_count(startup_inc, 12).\nemployee_count(charity_foundation, 15).\n\n% Annual revenue (in thousands)\nannual_revenue(techcorp, 2500).\nannual_revenue(moms_bakery, 180).\nannual_revenue(city_hospital, 8000).\nannual_revenue(green_consulting, 420).\nannual_revenue(mega_retail, 3200).\nannual_revenue(local_cafe, 95).\nannual_revenue(startup_inc, 380).\nannual_revenue(charity_foundation, 0).\n\n% Special designations\nminority_owned(moms_bakery).\nminority_owned(local_cafe).\nessential_service(city_hospital).\nessential_service(charity_foundation).",
+  "law_description": "Business License Law (City Ordinance 2024-003):\n\n1. License Categories:\n   - Class A: Large businesses (50+ employees OR revenue > 1000k)\n   - Class B: Medium businesses (10-49 employees OR revenue 200-1000k)\n   - Class C: Small businesses (< 10 employees AND revenue < 200k)\n\n2. License Fees:\n   - Class A: 5000 credits annually\n   - Class B: 1500 credits annually  \n   - Class C: 300 credits annually\n\n3. Special Rules:\n   - Non-profit businesses: Always Class C, fee = 50 credits\n   - Essential services: 50% discount on normal fee\n   - Minority-owned small businesses: Additional 25% discount\n   - Healthcare businesses with 100+ employees: Automatic Class A\n\n4. Implementation requirements:\n   - Implement predicate: license_class(Business, Class)\n   - Implement predicate: license_fee(Business, Fee)\n   - Handle all special cases and discounts correctly",
+  "queries": [
+    {
+      "query": "license_class(techcorp, Class)",
+      "expected": ["a"],
+      "description": "Techcorp has 45 employees but revenue > 1000k, so Class A"
+    },
+    {
+      "query": "license_class(city_hospital, Class)",
+      "expected": ["a"],
+      "description": "City hospital is healthcare with 120 employees, automatic Class A"
+    },
+    {
+      "query": "license_class(green_consulting, Class)",
+      "expected": ["b"],
+      "description": "Green consulting: 8 employees but revenue 420k, so Class B"
+    },
+    {
+      "query": "license_class(local_cafe, Class)",
+      "expected": ["c"],
+      "description": "Local cafe: 2 employees and revenue 95k, so Class C"
+    },
+    {
+      "query": "license_class(charity_foundation, Class)",
+      "expected": ["c"],
+      "description": "Charity is non-profit, always Class C regardless of size"
+    },
+    {
+      "query": "license_fee(techcorp, Fee)",
+      "expected": ["5000"],
+      "description": "Techcorp is Class A, standard fee 5000"
+    },
+    {
+      "query": "license_fee(city_hospital, Fee)",
+      "expected": ["2500"],
+      "description": "City hospital: Class A (5000) with 50% essential service discount"
+    },
+    {
+      "query": "license_fee(charity_foundation, Fee)",
+      "expected": ["25"],
+      "description": "Charity: Non-profit Class C (50) with 50% essential service discount"
+    },
+    {
+      "query": "license_fee(local_cafe, Fee)",
+      "expected": ["225"],
+      "description": "Local cafe: Class C (300) with 25% minority-owned discount"
+    },
+    {
+      "query": "license_fee(moms_bakery, Fee)",
+      "expected": ["225"],
+      "description": "Mom's bakery: Class C (300) with 25% minority-owned discount"
+    }
+  ],
+  "hints": [
+    "Handle non-profit businesses first - they override normal classification rules",
+    "Healthcare with 100+ employees is a special case for Class A",
+    "Use OR conditions for Class A and B (employees OR revenue)",
+    "Apply discounts in order: essential service discount first, then minority-owned",
+    "Remember that discounts apply to the base fee for each class"
+  ],
+  "difficulty": 3
+}

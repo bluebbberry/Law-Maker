@@ -948,7 +948,7 @@ subsidy_amount(Person, Amount) :-
                     # Load and resize the image
                     image = Image.open("sprites/cityscape-background-illustration.jpg")
                     # Resize to fit nicely in the dialog
-                    image = image.resize((800, 300), Image.Resampling.LANCZOS)
+                    image = image.resize((800, 400), Image.Resampling.LANCZOS)
                     photo = ImageTk.PhotoImage(image)
 
                     # Image label
@@ -1058,7 +1058,7 @@ subsidy_amount(Person, Amount) :-
                                                                                                   anchor=tk.CENTER)
 
             # OK button
-            ok_button = tk.Button(main_frame, text="Yeah! Let's start Coding!",
+            ok_button = tk.Button(main_frame, text="Sure! Let's start Coding!",
                                   command=dialog.destroy,
                                   font=('Arial', 12, 'bold'),
                                   bg='#4d7036', fg='#90EE90',
