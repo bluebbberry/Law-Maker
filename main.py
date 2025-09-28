@@ -17,6 +17,13 @@ from enum import Enum
 import threading
 import sys
 
+# Try to import PIL, fall back gracefully if not available
+try:
+    from PIL import Image, ImageTk
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+
 # Try to import janus_swi for better Prolog integration
 try:
     import janus_swi as janus
@@ -301,7 +308,7 @@ class JanusPrologRunner:
         if self.janus_available:
             try:
                 # Initialize janus_swi
-                janus.query_once("writeln('Hello world!')")
+                janus.query_once("writeln('Prolog available!')")
                 self.prolog_available = True
             except Exception as e:
                 print(f"Error initializing janus_swi: {e}")
@@ -915,23 +922,88 @@ subsidy_amount(Person, Amount) :-
         except Exception as e:
             messagebox.showerror("Error", f"🔧 Failed to refresh legal database:\n{e}")
 
+    import tkinter as tk
+    from tkinter import messagebox
+    from PIL import Image, ImageTk
+    import os
+
     def run(self):
         """Start the Solarpunk GUI application"""
-        # Add a welcome message
-        welcome_msg = """🌱 Welcome to the Solarfurt Legal System! 🌱
 
-This rusty-but-reliable bio-integrated compiler helps you implement 
-sustainable laws for our eco-friendly city-state.
+        def show_welcome_dialog():
+            """Create a custom welcome dialog with image"""
+            # Create the dialog window
+            dialog = tk.Toplevel(self.root)
+            dialog.title("🌱 Welcome to Solarfurt! 🔋")
+            dialog.geometry("500x600")
+            dialog.resizable(False, False)
+            dialog.grab_set()  # Make it modal
 
-🔋 Features:
-• Powered by renewable legal energy
-• Rust-resistant future-proof architecture  
-• Organic user interface with living code
-• Prolog-based sustainable governance
+            # Center the dialog
+            dialog.transient(self.root)
+            dialog.geometry("+%d+%d" % (self.root.winfo_rootx() + 50, self.root.winfo_rooty() + 50))
 
-⚡ Ready to serve justice with style! ⚡"""
+            # Main frame
+            main_frame = tk.Frame(dialog, bg='#2d5016', padx=20, pady=20)
+            main_frame.pack(fill=tk.BOTH, expand=True)
 
-        messagebox.showinfo("🌱 Welcome to Solarfurt! 🔋", welcome_msg)
+            # Try to load and display the image
+            try:
+                if os.path.exists("sprites/cityscape-background-illustration.jpg"):
+                    # Load and resize the image
+                    image = Image.open("sprites/cityscape-background-illustration.jpg")
+                    # Resize to fit nicely in the dialog
+                    image = image.resize((400, 200), Image.Resampling.LANCZOS)
+                    photo = ImageTk.PhotoImage(image)
+
+                    # Image label
+                    img_label = tk.Label(main_frame, image=photo, bg='#2d5016')
+                    img_label.image = photo  # Keep a reference
+                    img_label.pack(pady=(0, 20))
+                else:
+                    # Fallback if image not found
+                    tk.Label(main_frame, text="🏙️ [City Image Not Found] 🏙️",
+                             font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+            except Exception as e:
+                # Fallback if PIL not available or other error
+                tk.Label(main_frame, text="🏙️ [Solarpunk City] 🏙️",
+                         font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+
+            # Welcome message
+            welcome_msg = """🌱 Welcome to the Solarfurt Legal System! 🌱
+
+    This rusty-but-reliable bio-integrated compiler helps you implement sustainable laws for our eco-friendly city-state on the Jupiter moon Callisto.
+
+    🔋 Features:
+    • Powered by renewable legal energy
+    • Rust-resistant future-proof architecture  
+    • Organic user interface with living code
+    • Prolog-based sustainable governance
+
+    ⚡ Ready to serve justice with style! ⚡"""
+
+            # Text widget for the message (allows better formatting)
+            text_widget = tk.Text(main_frame, height=15, width=50, wrap=tk.WORD,
+                                  font=('Arial', 10), bg='#3d6026', fg='#90EE90',
+                                  relief=tk.FLAT, bd=0, padx=10, pady=10)
+            text_widget.insert(tk.END, welcome_msg)
+            text_widget.config(state=tk.DISABLED)  # Make it read-only
+            text_widget.pack(pady=(0, 20))
+
+            # OK button
+            ok_button = tk.Button(main_frame, text="🚀 Start Coding Justice! 🚀",
+                                  command=dialog.destroy,
+                                  font=('Arial', 12, 'bold'),
+                                  bg='#4d7036', fg='#90EE90',
+                                  relief=tk.RAISED, bd=2,
+                                  padx=20, pady=10)
+            ok_button.pack()
+
+            # Wait for the dialog to be closed
+            dialog.wait_window()
+
+        # Show the welcome dialog
+        show_welcome_dialog()
 
         # Start the main loop
         self.root.mainloop()
