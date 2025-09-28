@@ -970,17 +970,12 @@ subsidy_amount(Person, Amount) :-
                          font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
 
             # Welcome message
-            welcome_msg = """🌱 Welcome to the Solarfurt Legal System! 🌱
+            welcome_msg = """Welcome to Solarfurt!
 
-    This rusty-but-reliable bio-integrated compiler helps you implement sustainable laws for our eco-friendly city-state on the Jupiter moon Callisto.
+    Beginning with the year 2028, a process was set off to transform all laws of Solarfurt into a machine-processable format.
+    For this, a new device was developed: the "Pocket-Inferer", a logical calculator with which public servants could turn laws, data and queries into understandable code.
 
-    🔋 Features:
-    • Powered by renewable legal energy
-    • Rust-resistant future-proof architecture  
-    • Organic user interface with living code
-    • Prolog-based sustainable governance
-
-    ⚡ Ready to serve justice with style! ⚡"""
+    Are you up for the challenge?"""
 
             # Text widget for the message (allows better formatting)
             text_widget = tk.Text(main_frame, height=15, width=50, wrap=tk.WORD,
@@ -991,7 +986,7 @@ subsidy_amount(Person, Amount) :-
             text_widget.pack(pady=(0, 20))
 
             # OK button
-            ok_button = tk.Button(main_frame, text="🚀 Start Coding Justice! 🚀",
+            ok_button = tk.Button(main_frame, text="Yeah! Let's start Coding!",
                                   command=dialog.destroy,
                                   font=('Arial', 12, 'bold'),
                                   bg='#4d7036', fg='#90EE90',
