@@ -934,8 +934,8 @@ subsidy_amount(Person, Amount) :-
             """Create a custom welcome dialog with image"""
             # Create the dialog window
             dialog = tk.Toplevel(self.root)
-            dialog.title("🌱 Welcome to Solarfurt! 🔋")
-            dialog.geometry("500x600")
+            dialog.title("Law Maker")
+            dialog.geometry("900x800")
             dialog.resizable(False, False)
             dialog.grab_set()  # Make it modal
 
@@ -953,7 +953,7 @@ subsidy_amount(Person, Amount) :-
                     # Load and resize the image
                     image = Image.open("sprites/cityscape-background-illustration.jpg")
                     # Resize to fit nicely in the dialog
-                    image = image.resize((400, 200), Image.Resampling.LANCZOS)
+                    image = image.resize((800, 400), Image.Resampling.LANCZOS)
                     photo = ImageTk.PhotoImage(image)
 
                     # Image label
@@ -962,18 +962,19 @@ subsidy_amount(Person, Amount) :-
                     img_label.pack(pady=(0, 20))
                 else:
                     # Fallback if image not found
-                    tk.Label(main_frame, text="🏙️ [City Image Not Found] 🏙️",
+                    tk.Label(main_frame, text="[City Image Not Found]",
                              font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
             except Exception as e:
                 # Fallback if PIL not available or other error
-                tk.Label(main_frame, text="🏙️ [Solarpunk City] 🏙️",
+                tk.Label(main_frame, text="[Solarpunk City]",
                          font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
 
             # Welcome message
             welcome_msg = """Welcome to Solarfurt!
 
-    Beginning with the year 2028, a process was set off to transform all laws of Solarfurt into a machine-processable format.
+    Beginning with the year 2028, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
     For this, a new device was developed: the "Pocket-Inferer", a logical calculator with which public servants could turn laws, data and queries into understandable code.
+    As a civil servant, your task will be to learn how to use the Pocket-Inferer and turn law into code.
 
     Are you up for the challenge?"""
 
