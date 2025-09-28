@@ -17,6 +17,13 @@ from enum import Enum
 import threading
 import sys
 
+# Try to import PIL, fall back gracefully if not available
+try:
+    from PIL import Image, ImageTk
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+
 # Try to import janus_swi for better Prolog integration
 try:
     import janus_swi as janus
@@ -244,7 +251,7 @@ class LevelLoader:
             "id": "student_meal_subsidy",
             "title": "Student Meal Subsidy Law",
             "description": "Implement the new student meal subsidy law for Solarfurt",
-            "background_story": "🌱 Welcome to Solarfurt, civil servant! Our eco-friendly city council has passed the Student Meal Subsidy Law. Your job is to implement this law in our bio-integrated legal database system.\n\n🔋 The law supports sustainable living: students under 25 are eligible for meal subsidies. Base rate is 50 credits, with a 30-credit bonus for low-income students.\n\n🏛️ This is your first assignment in our rusty-but-reliable legal tech system. Code with care - the future depends on it!",
+            "background_story": "🌱 Welcome to Solarfurt, civil servant! Our eco-friendly city council has passed the Student Meal Subsidy Law. Your job is to implement this law in our legal database system.\n\n🔋 The law supports sustainable living: students under 25 are eligible for meal subsidies. Base rate is 50 credits, with a 30-credit bonus for low-income students.\n\n🏛️ This is your first assignment in our rusty-but-reliable legal tech system. Code with care - the future depends on it!",
             "given_facts": "% Citizens of Solarfurt's sustainable community\nperson(alice).\nperson(bob).\nperson(charlie).\nperson(diana).\n\n% Personal information\nage(alice, 22).\nage(bob, 26).\nage(charlie, 19).\nage(diana, 23).\n\n% Income levels\nincome(alice, low).\nincome(bob, medium).\nincome(charlie, low).\nincome(diana, high).\n\n% Student status\nstudent(alice).\nstudent(charlie).\n% Note: diana is NOT a student, bob is too old",
             "law_description": "🌿 Student Meal Subsidy Law (Solarfurt Ordinance 2024-001):\n\n1. Eligibility: Must be a student AND under 25 years old\n2. Base subsidy: 50 credits per month for eligible students\n3. Low-income bonus: Additional 30 credits (total 80)\n4. Implementation: Create eligible(Person) and subsidy_amount(Person, Amount)\n5. Non-eligible persons should make subsidy_amount fail",
             "queries": [
@@ -301,7 +308,7 @@ class JanusPrologRunner:
         if self.janus_available:
             try:
                 # Initialize janus_swi
-                janus.query_once("writeln('Hello world!')")
+                janus.query_once("writeln('Prolog available!')")
                 self.prolog_available = True
             except Exception as e:
                 print(f"Error initializing janus_swi: {e}")
@@ -474,7 +481,7 @@ class LawMakerGUI:
         self.notebook.add(self.problem_frame, text="📖 Legal Brief")
 
         self.editor_frame = ttk.Frame(self.notebook, style='Solarpunk.TFrame')
-        self.notebook.add(self.editor_frame, text="⚡ Code Forge")
+        self.notebook.add(self.editor_frame, text="🖩 Pocket-Inferer")
 
         self.results_frame = ttk.Frame(self.notebook, style='Solarpunk.TFrame')
         self.notebook.add(self.results_frame, text="🔍 Test Results")
@@ -507,7 +514,7 @@ class LawMakerGUI:
         header.pack(pady=15)
 
         desc = ttk.Label(self.level_frame,
-                         text="Choose a law to implement in our bio-integrated legal database:",
+                         text="Choose a law to implement in our legal database:",
                          style='Solarpunk.TLabel')
         desc.pack(pady=5)
 
@@ -568,7 +575,7 @@ class LawMakerGUI:
 
         # Law description tab
         law_frame = ttk.Frame(problem_notebook, style='Solarpunk.TFrame')
-        problem_notebook.add(law_frame, text="⚖️ Legal Code")
+        problem_notebook.add(law_frame, text="⚖️ Legal Requirements")
         self.law_text = self.create_styled_text(law_frame, state=tk.DISABLED, height=12)
         self.law_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -580,7 +587,7 @@ class LawMakerGUI:
 
         # Hints tab
         hints_frame = ttk.Frame(problem_notebook, style='Solarpunk.TFrame')
-        problem_notebook.add(hints_frame, text="💡 Wisdom")
+        problem_notebook.add(hints_frame, text="💡 Hints")
         self.hints_text = self.create_styled_text(hints_frame, state=tk.DISABLED, height=12)
         self.hints_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -590,7 +597,7 @@ class LawMakerGUI:
         editor_header = ttk.Frame(self.editor_frame, style='Panel.TFrame')
         editor_header.pack(fill=tk.X, padx=10, pady=10)
 
-        ttk.Label(editor_header, text="⚡ Prolog Code Forge",
+        ttk.Label(editor_header, text="Prolog Pocket-Inferer",
                   style='Header.TLabel').pack(side=tk.LEFT)
 
         self.attempts_label = ttk.Label(editor_header, text="", style='Solarpunk.TLabel')
@@ -680,7 +687,7 @@ class LawMakerGUI:
 
             # Update hints
             if self.current_level.hints:
-                hints_text = "💡 Ancient Wisdom from the Code Elders:\n\n"
+                hints_text = "💡 Hints from the local Net:\n\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     hints_text += f"{i}. {hint}\n"
             else:
@@ -772,7 +779,7 @@ class LawMakerGUI:
 
             # Level completed
             messagebox.showinfo("🎉 Success!",
-                                f"Mission {self.current_level_index + 1} completed!\n\n🌿 Your Prolog implementation correctly satisfies all legal requirements.\n\n⚡ The bio-integrated legal system approves!")
+                                f"Mission {self.current_level_index + 1} completed!\n\n🌿 Your Prolog implementation correctly satisfies all legal requirements.\n\nGood job!")
 
         elif result == GameResult.PROLOG_ERROR:
             results_text += "⚠️ SYSTEM ERROR ⚠️\n"
@@ -812,7 +819,7 @@ class LawMakerGUI:
 
             # Show hints after first failure
             if self.attempts_remaining == 2 and self.current_level.hints:
-                results_text += "\n💡 The Code Elders whisper their wisdom:\n"
+                results_text += "\n💡 You can browse the local net for hints:\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     results_text += f"{i}. {hint}\n"
 
@@ -848,7 +855,7 @@ class LawMakerGUI:
     def display_error(self, error_msg: str):
         """Display an error message with Solarpunk styling"""
         self.test_button.config(state=tk.NORMAL, text="🔬 Test Implementation")
-        messagebox.showerror("⚠️ System Error", f"🔧 The bio-integrated compiler encountered an issue:\n\n{error_msg}")
+        messagebox.showerror("⚠️ System Error", f"🔧 The compiler encountered an issue:\n\n{error_msg}")
 
     def clear_code(self):
         """Clear the code editor"""
@@ -915,23 +922,84 @@ subsidy_amount(Person, Amount) :-
         except Exception as e:
             messagebox.showerror("Error", f"🔧 Failed to refresh legal database:\n{e}")
 
+    import tkinter as tk
+    from tkinter import messagebox
+    from PIL import Image, ImageTk
+    import os
+
     def run(self):
         """Start the Solarpunk GUI application"""
-        # Add a welcome message
-        welcome_msg = """🌱 Welcome to the Solarfurt Legal System! 🌱
 
-This rusty-but-reliable bio-integrated compiler helps you implement 
-sustainable laws for our eco-friendly city-state.
+        def show_welcome_dialog():
+            """Create a custom welcome dialog with image"""
+            # Create the dialog window
+            dialog = tk.Toplevel(self.root)
+            dialog.title("Law Maker")
+            dialog.geometry("900x800")
+            dialog.resizable(False, False)
+            dialog.grab_set()  # Make it modal
 
-🔋 Features:
-• Powered by renewable legal energy
-• Rust-resistant future-proof architecture  
-• Organic user interface with living code
-• Prolog-based sustainable governance
+            # Center the dialog
+            dialog.transient(self.root)
+            dialog.geometry("+%d+%d" % (self.root.winfo_rootx() + 50, self.root.winfo_rooty() + 50))
 
-⚡ Ready to serve justice with style! ⚡"""
+            # Main frame
+            main_frame = tk.Frame(dialog, bg='#2d5016', padx=20, pady=20)
+            main_frame.pack(fill=tk.BOTH, expand=True)
 
-        messagebox.showinfo("🌱 Welcome to Solarfurt! 🔋", welcome_msg)
+            # Try to load and display the image
+            try:
+                if os.path.exists("sprites/cityscape-background-illustration.jpg"):
+                    # Load and resize the image
+                    image = Image.open("sprites/cityscape-background-illustration.jpg")
+                    # Resize to fit nicely in the dialog
+                    image = image.resize((800, 400), Image.Resampling.LANCZOS)
+                    photo = ImageTk.PhotoImage(image)
+
+                    # Image label
+                    img_label = tk.Label(main_frame, image=photo, bg='#2d5016')
+                    img_label.image = photo  # Keep a reference
+                    img_label.pack(pady=(0, 20))
+                else:
+                    # Fallback if image not found
+                    tk.Label(main_frame, text="[City Image Not Found]",
+                             font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+            except Exception as e:
+                # Fallback if PIL not available or other error
+                tk.Label(main_frame, text="[Solarpunk City]",
+                         font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+
+            # Welcome message
+            welcome_msg = """Welcome to Solarfurt!
+
+    Beginning with the year 2028, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
+    For this, a new device was developed: the "Pocket-Inferer", a logical calculator with which public servants could turn laws, data and queries into understandable code.
+    As a civil servant, your task will be to learn how to use the Pocket-Inferer and turn law into code.
+
+    Are you up for the challenge?"""
+
+            # Text widget for the message (allows better formatting)
+            text_widget = tk.Text(main_frame, height=15, width=50, wrap=tk.WORD,
+                                  font=('Arial', 10), bg='#3d6026', fg='#90EE90',
+                                  relief=tk.FLAT, bd=0, padx=10, pady=10)
+            text_widget.insert(tk.END, welcome_msg)
+            text_widget.config(state=tk.DISABLED)  # Make it read-only
+            text_widget.pack(pady=(0, 20))
+
+            # OK button
+            ok_button = tk.Button(main_frame, text="Yeah! Let's start Coding!",
+                                  command=dialog.destroy,
+                                  font=('Arial', 12, 'bold'),
+                                  bg='#4d7036', fg='#90EE90',
+                                  relief=tk.RAISED, bd=2,
+                                  padx=20, pady=10)
+            ok_button.pack()
+
+            # Wait for the dialog to be closed
+            dialog.wait_window()
+
+        # Show the welcome dialog
+        show_welcome_dialog()
 
         # Start the main loop
         self.root.mainloop()
@@ -946,7 +1014,7 @@ def create_sample_levels():
     # Create a Solarpunk-themed README
     readme_content = """# 🌱 Solarfurt Legal System - Mission Database 🔋
 
-Welcome to the bio-integrated legal code repository for the sustainable city-state of Solarfurt!
+Welcome to the legal code repository for the sustainable city-state of Solarfurt!
 
 ## 🏛️ Mission Structure
 
@@ -958,7 +1026,7 @@ Each legal mission is stored as a JSON file with eco-friendly metadata:
   "title": "Mission Title",
   "description": "Brief eco-description",
   "background_story": "🌿 Sustainable story context",
-  "given_facts": "% Prolog facts from the bio-database",
+  "given_facts": "% Prolog facts from the database",
   "law_description": "⚖️ Legal requirements for implementation",
   "queries": [
     {
@@ -967,7 +1035,7 @@ Each legal mission is stored as a JSON file with eco-friendly metadata:
       "description": "🧪 Test specification"
     }
   ],
-  "hints": ["💡 Wisdom from the Code Elders"],
+  "hints": ["💡 Hints from the local net"],
   "difficulty": 1
 }
 ```
@@ -977,7 +1045,7 @@ Each legal mission is stored as a JSON file with eco-friendly metadata:
 1. Create a new JSON file in this directory
 2. Follow the naming convention: `XX_mission_name.json`
 3. Use sustainable coding practices
-4. Test thoroughly in the bio-compiler
+4. Test thoroughly in the compiler
 5. Refresh the legal database in the app
 
 ## ⚡ Mission Design Philosophy
@@ -1001,7 +1069,7 @@ def main():
 
     # Create sample levels if they don't exist
     if not os.path.exists("levels") or not os.listdir("levels"):
-        print("🔧 Setting up bio-integrated legal database...")
+        print("🔧 Setting up legal database...")
         create_sample_levels()
 
     # Check for janus_swi
@@ -1018,7 +1086,7 @@ def main():
     except KeyboardInterrupt:
         print("\n🌱 Legal system shutdown initiated. Thank you for serving Solarfurt!")
     except Exception as e:
-        print(f"🔧 System error in the bio-compiler: {e}")
+        print(f"🔧 System error in the compiler: {e}")
         import traceback
         traceback.print_exc()
 
