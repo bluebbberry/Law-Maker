@@ -61,6 +61,7 @@ class Level:
     queries: List[Query]
     hints: List[str] = None
     difficulty: int = 1
+    solution: List[str] = None
 
 
 # Updated GUI text elements with cleaner Star Trek + Solarpunk styling
@@ -232,7 +233,8 @@ class LevelLoader:
                 law_description=data['law_description'],
                 queries=queries,
                 hints=data.get('hints', []),
-                difficulty=data.get('difficulty', 1)
+                difficulty=data.get('difficulty', 1),
+                solution=data.get('solution', [])
             )
 
             return level
@@ -591,6 +593,12 @@ class LawMakerGUI:
         self.hints_text = self.create_styled_text(hints_frame, state=tk.DISABLED, height=12)
         self.hints_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
+        # Solutions tab
+        cheat_sheet_frame = ttk.Frame(problem_notebook, style='Solarpunk.TFrame')
+        problem_notebook.add(cheat_sheet_frame, text="📄 Cheatsheet")
+        self.cheat_sheet_text = self.create_styled_text(cheat_sheet_frame, state=tk.DISABLED, height=12)
+        self.cheat_sheet_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
     def setup_code_editor(self):
         """Setup Solarpunk-styled code editor panel"""
         # Header
@@ -691,9 +699,19 @@ class LawMakerGUI:
                 for i, hint in enumerate(self.current_level.hints, 1):
                     hints_text += f"{i}. {hint}\n"
             else:
-                hints_text = "💫 No hints available - trust in the code, young padawan."
+                hints_text = "No hints available."
 
             self.update_text_widget(self.hints_text, hints_text)
+
+            # Update cheat sheet
+            if self.current_level.solution:
+                cheat_sheet_text = "📄 Cheat Sheet (Solution)\n\n"
+                for solution in self.current_level.solution:
+                    cheat_sheet_text += f"{solution}\n"
+            else:
+                cheat_sheet_text = "No solution available."
+
+            self.update_text_widget(self.cheat_sheet_text, cheat_sheet_text)
 
             # Clear editor and results
             self.code_text.delete(1.0, tk.END)
