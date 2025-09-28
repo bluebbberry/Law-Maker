@@ -43,5 +43,21 @@
     "Use \\+ (negation) to check for non-low income in the base amount rule",
     "Make sure subsidy_amount/2 fails for non-eligible people"
   ],
-  "difficulty": 1
+  "difficulty": 1,
+  "solution": [
+    "eligible(Person) :-",
+    "student(Person),           % Must be a student",
+    "    age(Person, Age),          % Get the person's age",
+    "    Age < 25.                  % Age must be less than 25",
+    "",
+    "% Rule 2a: Low-income eligible students get 80 credits (50 + 30 bonus)",
+    "subsidy_amount(Person, 80) :-",
+    "    eligible(Person),          % Person must be eligible first",
+    "    income(Person, low).       % AND have low income",
+    "",
+    "% Rule 2b: Non-low-income eligible students get 50 credits (base amount)",
+    "subsidy_amount(Person, 50) :-",
+    "    eligible(Person),          % Person must be eligible first",
+    "   \\+ income(Person, low).    % AND NOT have low income"
+  ]
 }

@@ -61,6 +61,7 @@ class Level:
     queries: List[Query]
     hints: List[str] = None
     difficulty: int = 1
+    solution: List[str] = None
 
 
 # Updated GUI text elements with cleaner Star Trek + Solarpunk styling
@@ -232,7 +233,8 @@ class LevelLoader:
                 law_description=data['law_description'],
                 queries=queries,
                 hints=data.get('hints', []),
-                difficulty=data.get('difficulty', 1)
+                difficulty=data.get('difficulty', 1),
+                solution=data.get('solution', [])
             )
 
             return level
@@ -465,7 +467,7 @@ class LawMakerGUI:
         title_label.pack(pady=10)
 
         subtitle = ttk.Label(header_frame,
-                             text="B Wing, 2030/05/12",
+                             text="B Wing, 2028/05/12",
                              style='Header.TLabel')
         subtitle.pack(pady=(0, 10))
 
@@ -591,6 +593,12 @@ class LawMakerGUI:
         self.hints_text = self.create_styled_text(hints_frame, state=tk.DISABLED, height=12)
         self.hints_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
+        # Solutions tab
+        cheat_sheet_frame = ttk.Frame(problem_notebook, style='Solarpunk.TFrame')
+        problem_notebook.add(cheat_sheet_frame, text="📄 Cheatsheet")
+        self.cheat_sheet_text = self.create_styled_text(cheat_sheet_frame, state=tk.DISABLED, height=12)
+        self.cheat_sheet_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
     def setup_code_editor(self):
         """Setup Solarpunk-styled code editor panel"""
         # Header
@@ -647,7 +655,7 @@ class LawMakerGUI:
         """Populate the level selection list"""
         self.level_listbox.delete(0, tk.END)
         for i, level in enumerate(self.levels):
-            difficulty_icons = "⚡" * level.difficulty + "🌿" * (5 - level.difficulty)
+            difficulty_icons = "☀️" * level.difficulty
             self.level_listbox.insert(tk.END,
                                       f"Mission {i + 1}: {level.title} {difficulty_icons}")
 
@@ -687,13 +695,23 @@ class LawMakerGUI:
 
             # Update hints
             if self.current_level.hints:
-                hints_text = "💡 Hints from the local Net:\n\n"
+                hints_text = "💡 Hints from the fedi-net:\n\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     hints_text += f"{i}. {hint}\n"
             else:
-                hints_text = "💫 No hints available - trust in the code, young padawan."
+                hints_text = "No hints available."
 
             self.update_text_widget(self.hints_text, hints_text)
+
+            # Update cheat sheet
+            if self.current_level.solution:
+                cheat_sheet_text = "📄 Cheat Sheet (Solution)\n\n"
+                for solution in self.current_level.solution:
+                    cheat_sheet_text += f"{solution}\n"
+            else:
+                cheat_sheet_text = "No solution available."
+
+            self.update_text_widget(self.cheat_sheet_text, cheat_sheet_text)
 
             # Clear editor and results
             self.code_text.delete(1.0, tk.END)
@@ -819,7 +837,7 @@ class LawMakerGUI:
 
             # Show hints after first failure
             if self.attempts_remaining == 2 and self.current_level.hints:
-                results_text += "\n💡 You can browse the local net for hints:\n"
+                results_text += "\n💡 You can browse the fedi-net for hints:\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     results_text += f"{i}. {hint}\n"
 
