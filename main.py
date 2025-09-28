@@ -687,7 +687,7 @@ class LawMakerGUI:
 
             # Update hints
             if self.current_level.hints:
-                hints_text = "💡 Hints from the local Net:\n\n"
+                hints_text = "💡 Hints from the fedi-net:\n\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     hints_text += f"{i}. {hint}\n"
             else:
@@ -819,7 +819,7 @@ class LawMakerGUI:
 
             # Show hints after first failure
             if self.attempts_remaining == 2 and self.current_level.hints:
-                results_text += "\n💡 You can browse the local net for hints:\n"
+                results_text += "\n💡 You can browse the fedi-net for hints:\n"
                 for i, hint in enumerate(self.current_level.hints, 1):
                     results_text += f"{i}. {hint}\n"
 
