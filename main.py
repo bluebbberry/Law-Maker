@@ -922,11 +922,6 @@ subsidy_amount(Person, Amount) :-
         except Exception as e:
             messagebox.showerror("Error", f"🔧 Failed to refresh legal database:\n{e}")
 
-    import tkinter as tk
-    from tkinter import messagebox
-    from PIL import Image, ImageTk
-    import os
-
     def run(self):
         """Start the Solarpunk GUI application"""
 
@@ -935,7 +930,7 @@ subsidy_amount(Person, Amount) :-
             # Create the dialog window
             dialog = tk.Toplevel(self.root)
             dialog.title("Law Maker")
-            dialog.geometry("900x800")
+            dialog.geometry("900x900")  # Made taller to accommodate both images
             dialog.resizable(False, False)
             dialog.grab_set()  # Make it modal
 
@@ -943,48 +938,124 @@ subsidy_amount(Person, Amount) :-
             dialog.transient(self.root)
             dialog.geometry("+%d+%d" % (self.root.winfo_rootx() + 50, self.root.winfo_rooty() + 50))
 
-            # Main frame
+            # Main frame with scrollbar capability
             main_frame = tk.Frame(dialog, bg='#2d5016', padx=20, pady=20)
             main_frame.pack(fill=tk.BOTH, expand=True)
 
-            # Try to load and display the image
+            # Try to load and display the cityscape image
             try:
                 if os.path.exists("sprites/cityscape-background-illustration.jpg"):
                     # Load and resize the image
                     image = Image.open("sprites/cityscape-background-illustration.jpg")
                     # Resize to fit nicely in the dialog
-                    image = image.resize((800, 400), Image.Resampling.LANCZOS)
+                    image = image.resize((800, 300), Image.Resampling.LANCZOS)
                     photo = ImageTk.PhotoImage(image)
 
                     # Image label
                     img_label = tk.Label(main_frame, image=photo, bg='#2d5016')
                     img_label.image = photo  # Keep a reference
-                    img_label.pack(pady=(0, 20))
+                    img_label.pack(pady=(0, 15))
                 else:
                     # Fallback if image not found
                     tk.Label(main_frame, text="[City Image Not Found]",
-                             font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+                             font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 15))
             except Exception as e:
                 # Fallback if PIL not available or other error
                 tk.Label(main_frame, text="[Solarpunk City]",
-                         font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 20))
+                         font=('Arial', 12), bg='#2d5016', fg='#90EE90').pack(pady=(0, 15))
 
-            # Welcome message
+            # Create a horizontal frame for text and device image side by side
+            content_frame = tk.Frame(main_frame, bg='#2d5016')
+            content_frame.pack(pady=(0, 15), fill=tk.BOTH, expand=True)
+
+            # Left side - Welcome text
+            text_frame = tk.Frame(content_frame, bg='#2d5016')
+            text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 10))
+
             welcome_msg = """Welcome to Solarfurt!
 
-    Beginning with the year 2028, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
+    It's the year 2028. Society is aging and more and more civil servants are starting to retire.
+
+    To tackle the problem, the citizens of Solarfurt decided to transform all laws into a machine-processable format.
+
     For this, a new device was developed: the "Pocket-Inferer", a logical calculator with which public servants could turn laws, data and queries into understandable code.
+
     As a civil servant, your task will be to learn how to use the Pocket-Inferer and turn law into code.
 
     Are you up for the challenge?"""
 
-            # Text widget for the message (allows better formatting)
-            text_widget = tk.Text(main_frame, height=15, width=50, wrap=tk.WORD,
+            # Text widget for the message
+            text_widget = tk.Text(text_frame, height=12, width=45, wrap=tk.WORD,
                                   font=('Arial', 10), bg='#3d6026', fg='#90EE90',
                                   relief=tk.FLAT, bd=0, padx=10, pady=10)
             text_widget.insert(tk.END, welcome_msg)
             text_widget.config(state=tk.DISABLED)  # Make it read-only
-            text_widget.pack(pady=(0, 20))
+            text_widget.pack(fill=tk.BOTH, expand=True)
+
+            # Right side - Pocket-Inferer device
+            device_frame = tk.Frame(content_frame, bg='#2d5016')
+            device_frame.pack(side=tk.RIGHT, padx=(10, 0))
+
+            # Try to load and display the Pocket-Inferer image
+            try:
+                if os.path.exists("sprites/pocket-inferer.jpg"):
+                    # Load and resize the Pocket-Inferer image
+                    pocket_image = Image.open("sprites/pocket-inferer.jpg")
+                    # Resize to fit nicely on the right side
+                    pocket_image = pocket_image.resize((300, 350), Image.Resampling.LANCZOS)
+                    pocket_photo = ImageTk.PhotoImage(pocket_image)
+
+                    # Label for the device
+                    tk.Label(device_frame, text="The Pocket-Inferer",
+                             font=('Arial', 12, 'bold'), bg='#2d5016', fg='#90EE90').pack(pady=(0, 10))
+
+                    # Device image
+                    pocket_img_label = tk.Label(device_frame, image=pocket_photo, bg='#2d5016')
+                    pocket_img_label.image = pocket_photo  # Keep a reference
+                    pocket_img_label.pack()
+
+                elif os.path.exists("sprites/pocket-inferer.png"):
+                    # Try PNG format as fallback
+                    pocket_image = Image.open("sprites/pocket-inferer.png")
+                    pocket_image = pocket_image.resize((300, 350), Image.Resampling.LANCZOS)
+                    pocket_photo = ImageTk.PhotoImage(pocket_image)
+
+                    tk.Label(device_frame, text="The Pocket-Inferer",
+                             font=('Arial', 12, 'bold'), bg='#2d5016', fg='#90EE90').pack(pady=(0, 10))
+
+                    pocket_img_label = tk.Label(device_frame, image=pocket_photo, bg='#2d5016')
+                    pocket_img_label.image = pocket_photo
+                    pocket_img_label.pack()
+
+                else:
+                    # Fallback if Pocket-Inferer image not found
+                    tk.Label(device_frame, text="The Pocket-Inferer",
+                             font=('Arial', 12, 'bold'), bg='#2d5016', fg='#90EE90').pack(pady=(0, 10))
+
+                    # Create a placeholder box
+                    placeholder_frame = tk.Frame(device_frame, bg='#4d7036', width=300, height=350, relief=tk.RAISED,
+                                                 bd=2)
+                    placeholder_frame.pack_propagate(False)  # Maintain size
+                    placeholder_frame.pack()
+
+                    tk.Label(placeholder_frame, text="📱\n[Device Image\nNot Found]\n🔧",
+                             font=('Arial', 12), bg='#4d7036', fg='#90EE90', justify=tk.CENTER).place(relx=0.5,
+                                                                                                      rely=0.5,
+                                                                                                      anchor=tk.CENTER)
+
+            except Exception as e:
+                # Fallback if image loading fails
+                tk.Label(device_frame, text="The Pocket-Inferer",
+                         font=('Arial', 12, 'bold'), bg='#2d5016', fg='#90EE90').pack(pady=(0, 10))
+
+                # Create a placeholder box
+                placeholder_frame = tk.Frame(device_frame, bg='#4d7036', width=300, height=350, relief=tk.RAISED, bd=2)
+                placeholder_frame.pack_propagate(False)  # Maintain size
+                placeholder_frame.pack()
+
+                tk.Label(placeholder_frame, text="📱\n[Logical\nCalculator]\n🔧",
+                         font=('Arial', 12), bg='#4d7036', fg='#90EE90', justify=tk.CENTER).place(relx=0.5, rely=0.5,
+                                                                                                  anchor=tk.CENTER)
 
             # OK button
             ok_button = tk.Button(main_frame, text="Yeah! Let's start Coding!",
@@ -993,7 +1064,7 @@ subsidy_amount(Person, Amount) :-
                                   bg='#4d7036', fg='#90EE90',
                                   relief=tk.RAISED, bd=2,
                                   padx=20, pady=10)
-            ok_button.pack()
+            ok_button.pack(pady=(15, 0))
 
             # Wait for the dialog to be closed
             dialog.wait_window()
@@ -1003,7 +1074,6 @@ subsidy_amount(Person, Amount) :-
 
         # Start the main loop
         self.root.mainloop()
-
 
 def create_sample_levels():
     """Create sample level files in the levels directory"""
