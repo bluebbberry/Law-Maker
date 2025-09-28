@@ -1,0 +1,63 @@
+{
+  "id": "court_scheduling",
+  "title": "Municipal Court Scheduling System",
+  "description": "Implement the complex court scheduling and case priority system",
+  "background_story": "The Solarfurt Municipal Court is overwhelmed! Chief Judge Martinez needs an automated system to schedule cases fairly and efficiently.\n\nThis is your most challenging assignment yet. You'll need to handle case priorities, judge specializations, time conflicts, and legal precedence rules. The system must ensure justice is served promptly while respecting court procedures.\n\nThe Bar Association and Citizens' Rights Group are both monitoring this implementation. A fair, efficient court system is crucial for democracy in Solarfurt!",
+  "given_facts": "% Available judges\njudge(martinez).\njudge(thompson).\njudge(liu).\njudge(patel).\n\n% Judge specializations\nspecializes_in(martinez, criminal).\nspecializes_in(martinez, administrative).\nspecializes_in(thompson, civil).\nspecializes_in(thompson, family).\nspecializes_in(liu, criminal).\nspecializes_in(liu, civil).\nspecializes_in(patel, family).\nspecializes_in(patel, administrative).\n\n% Pending cases\ncase(case_001).\ncase(case_002).\ncase(case_003).\ncase(case_004).\ncase(case_005).\ncase(case_006).\ncase(case_007).\ncase(case_008).\n\n% Case types\ncase_type(case_001, criminal).\ncase_type(case_002, civil).\ncase_type(case_003, family).\ncase_type(case_004, administrative).\ncase_type(case_005, criminal).\ncase_type(case_006, civil).\ncase_type(case_007, family).\ncase_type(case_008, administrative).\n\n% Case priorities (1=highest, 5=lowest)\ncase_priority(case_001, 1).  % urgent criminal case\ncase_priority(case_002, 3).  % standard civil case\ncase_priority(case_003, 2).  % child custody - high priority\ncase_priority(case_004, 4).  % administrative review\ncase_priority(case_005, 2).  % serious criminal case\ncase_priority(case_006, 3).  % standard civil case\ncase_priority(case_007, 1).  % emergency family matter\ncase_priority(case_008, 5).  % routine administrative\n\n% Case complexity (simple/complex)\ncase_complexity(case_001, complex).\ncase_complexity(case_002, simple).\ncase_complexity(case_003, complex).\ncase_complexity(case_004, simple).\ncase_complexity(case_005, simple).\ncase_complexity(case_006, complex).\ncase_complexity(case_007, simple).\ncase_complexity(case_008, simple).\n\n% Days when judges are available\navailable_day(martinez, monday).\navailable_day(martinez, wednesday).\navailable_day(martinez, friday).\navailable_day(thompson, tuesday).\navailable_day(thompson, thursday).\navailable_day(liu, monday).\navailable_day(liu, tuesday).\navailable_day(liu, wednesday).\navailable_day(patel, tuesday).\navailable_day(patel, thursday).\navailable_day(patel, friday).\n\n% Existing schedule conflicts\nscheduled(martinez, monday, case_999).  % martinez busy Monday\nscheduled(liu, wednesday, case_888).    % liu busy Wednesday",
+  "law_description": "Court Scheduling Regulation (Judicial Order 2024-001):\n\n1. Judge Assignment Rules:\n   - Judges can only handle cases in their specialization areas\n   - Judges must be available on the scheduled day\n   - Judges cannot be double-booked (check scheduled/3)\n\n2. Priority Scheduling:\n   - Priority 1 cases must be scheduled first (emergency cases)\n   - Priority 2 cases scheduled second (urgent cases)\n   - Priority 3-5 cases scheduled in order of availability\n\n3. Scheduling Preferences:\n   - Complex cases should be assigned to judges with lighter schedules\n   - Family cases with priority 1-2 should be expedited\n   - Criminal cases with priority 1 get first available slot\n\n4. Implementation Requirements:\n   - Implement predicate: can_schedule(Judge, Day, Case)\n     * Judge specializes in the case type\n     * Judge is available on that day\n     * Judge is not already scheduled on that day\n   - Implement predicate: schedule_priority(Case, Priority)\n     * Returns scheduling priority (lower number = higher priority)\n     * Emergency family (priority 1) gets priority 0\n     * Urgent criminal (priority 1) gets priority 0  \n     * All others keep their original priority\n   - Implement predicate: optimal_assignment(Case, Judge, Day)\n     * Finds the best judge-day combination for a case\n     * Must satisfy can_schedule/3 constraints",
+  "queries": [
+    {
+      "query": "can_schedule(martinez, monday, case_001)",
+      "expected": ["false"],
+      "description": "Martinez already scheduled on Monday (conflict)"
+    },
+    {
+      "query": "can_schedule(martinez, wednesday, case_001)",
+      "expected": ["martinez"],
+      "description": "Martinez specializes in criminal, available Wednesday, no conflict"
+    },
+    {
+      "query": "can_schedule(thompson, tuesday, case_002)",
+      "expected": ["thompson"],
+      "description": "Thompson specializes in civil, available Tuesday"
+    },
+    {
+      "query": "can_schedule(liu, wednesday, case_005)",
+      "expected": ["false"],
+      "description": "Liu already scheduled on Wednesday (conflict)"
+    },
+    {
+      "query": "schedule_priority(case_001, Priority)",
+      "expected": ["0"],
+      "description": "Urgent criminal case gets top priority (0)"
+    },
+    {
+      "query": "schedule_priority(case_007, Priority)",
+      "expected": ["0"],
+      "description": "Emergency family case gets top priority (0)"
+    },
+    {
+      "query": "schedule_priority(case_002, Priority)",
+      "expected": ["3"],
+      "description": "Standard civil case keeps original priority"
+    },
+    {
+      "query": "optimal_assignment(case_003, Judge, Day)",
+      "expected": ["thompson", "tuesday"],
+      "description": "Family case assigned to Thompson on available day"
+    },
+    {
+      "query": "findall(Judge, can_schedule(Judge, tuesday, case_004), Judges)",
+      "expected": ["[patel]"],
+      "description": "Only Patel can handle administrative cases on Tuesday"
+    }
+  ],
+  "hints": [
+    "Check all three conditions for can_schedule: specialization, availability, no conflicts",
+    "Use negation (\\+) to check that a judge is NOT already scheduled",
+    "Emergency cases (priority 1) in criminal or family get special priority 0",
+    "For optimal_assignment, find any valid judge-day combination that works",
+    "Remember that scheduled/3 shows existing conflicts to avoid"
+  ],
+  "difficulty": 5
+}

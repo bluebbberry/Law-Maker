@@ -1,0 +1,53 @@
+{
+  "id": "property_tax_assessment",
+  "title": "Property Tax Assessment Reform",
+  "description": "Implement the new progressive property tax system with multiple exemptions",
+  "background_story": "Solarfurt is facing a housing crisis! The city council has passed a revolutionary property tax reform to encourage affordable housing and support long-term residents.\n\nThis new system is the most complex law you've implemented yet. It includes progressive tax brackets, homestead exemptions, rent control considerations, and even environmental incentives.\n\nThe real estate lobby is watching every detail, and housing advocates are demanding fair implementation. The mayor's re-election depends on getting this right!",
+  "given_facts": "% Property owners and their properties\nowner(alice, oak_street_12).\nowner(bob, pine_avenue_45).\nowner(carol, main_street_100).\nowner(david, elm_court_7).\nowner(eve, river_road_23).\nowner(frank, hill_view_88).\nowner(grace, downtown_plaza_5).\n\n% Property values (in thousands)\nproperty_value(oak_street_12, 180).\nproperty_value(pine_avenue_45, 350).\nproperty_value(main_street_100, 750).\nproperty_value(elm_court_7, 125).\nproperty_value(river_road_23, 480).\nproperty_value(hill_view_88, 220).\nproperty_value(downtown_plaza_5, 950).\n\n% Property types\nproperty_type(oak_street_12, residential).\nproperty_type(pine_avenue_45, residential).\nproperty_type(main_street_100, commercial).\nproperty_type(elm_court_7, residential).\nproperty_type(river_road_23, residential).\nproperty_type(hill_view_88, residential).\nproperty_type(downtown_plaza_5, commercial).\n\n% Homestead status (primary residence)\nhomestead(alice, oak_street_12).\nhomestead(david, elm_court_7).\nhomestead(eve, river_road_23).\nhomestead(frank, hill_view_88).\n% bob, carol, grace don't live in their properties\n\n% Residency duration (years)\nresident_years(alice, 8).\nresident_years(david, 15).\nresident_years(eve, 3).\nresident_years(frank, 22).\n% non-residents have 0 years\n\n% Environmental features\ngreen_certified(oak_street_12).\ngreen_certified(river_road_23).\nsolar_panels(hill_view_88).\ngreen_certified(downtown_plaza_5).\n\n% Affordable housing designation\naffordable_housing(elm_court_7).",
+  "law_description": "Property Tax Reform Act (City Ordinance 2024-004):\n\n1. Base Tax Rates (per 1000 of property value):\n   - Residential: 12 credits per 1000\n   - Commercial: 18 credits per 1000\n\n2. Progressive Brackets (additional tax on amount over threshold):\n   - Properties > 400k: +5 credits per 1000 on excess\n   - Properties > 800k: +10 credits per 1000 on excess (cumulative)\n\n3. Homestead Exemption:\n   - Primary residence owners get 30% discount on total tax\n   - Must be owner's homestead to qualify\n\n4. Long-term Resident Discount:\n   - 10+ years residency: Additional 15% off final tax\n   - 20+ years residency: Additional 25% off final tax\n   - Only applies to homestead properties\n\n5. Special Designations:\n   - Affordable housing: 60% discount on total tax\n   - Green certified OR solar panels: 10% discount on total tax\n   - Green certified AND solar panels: 20% discount on total tax\n\n6. Implementation requirements:\n   - Implement predicate: property_tax(Property, Tax)\n   - Calculate base tax, apply brackets, then apply all applicable discounts\n   - Round final result to nearest whole number",
+  "queries": [
+    {
+      "query": "property_tax(oak_street_12, Tax)",
+      "expected": ["1134"],
+      "description": "Alice: 180k residential, homestead (30% off), 8 years residency, green certified (10% off)"
+    },
+    {
+      "query": "property_tax(pine_avenue_45, Tax)",
+      "expected": ["4200"],
+      "description": "Bob: 350k residential, no homestead, no discounts"
+    },
+    {
+      "query": "property_tax(main_street_100, Tax)",
+      "expected": ["16000"],
+      "description": "Carol: 750k commercial, no homestead, progressive bracket applies"
+    },
+    {
+      "query": "property_tax(elm_court_7, Tax)",
+      "expected": ["600"],
+      "description": "David: 125k residential, homestead, 15 years residency, affordable housing (60% off total)"
+    },
+    {
+      "query": "property_tax(river_road_23, Tax)",
+      "expected": ["4536"],
+      "description": "Eve: 480k residential, homestead, 3 years residency, green certified, progressive bracket"
+    },
+    {
+      "query": "property_tax(hill_view_88, Tax)",
+      "expected": ["1584"],
+      "description": "Frank: 220k residential, homestead, 22 years residency (25% off), solar panels"
+    },
+    {
+      "query": "property_tax(downtown_plaza_5, Tax)",
+      "expected": ["19440"],
+      "description": "Grace: 950k commercial, no homestead, green certified, both progressive brackets"
+    }
+  ],
+  "hints": [
+    "Calculate base tax first: (value / 1000) * rate",
+    "Apply progressive brackets: add extra tax for amounts over thresholds",
+    "Apply discounts in order: special designations, then homestead, then residency",
+    "Long-term residency discounts only apply to homestead properties",
+    "Affordable housing discount (60%) typically overrides other discounts if larger"
+  ],
+  "difficulty": 4
+}
